@@ -353,36 +353,48 @@ int main() {
     bool firstTime = true;
     cout<<"歡迎來到地下城"<<endl;
     cout<< endl<<"等級: "<<player.getLevelValue()<<endl<<"攻擊力: " <<player.getAttackValue() <<" 生命值: " <<player.getHealth()<<" 防禦力: " <<player.getDefense()<<endl;
+
+    int consecutiveNothingFound = 0; // 追蹤連續什麼都沒找到的次數
+
     while (true) {
         showMenu(firstTime);
         int choice;
         cin >> choice;
 
-
         if (choice == 1) {
             cout <<"#-------------#";
             cout << "\n已進入地下城..."<<endl;
-            Character enemy = generateEnemy(player.getLevelValue());
-            if (rand() % 3 == 0) {
+            if (consecutiveNothingFound < 2) {
+                if (rand() % 3 == 0) {
+                    Character enemy = generateEnemy(player.getLevelValue());
+                    cout << "\n遇到敵人: " << enemy.getName() << endl;
+                    battle(player, enemy);
+                    consecutiveNothingFound = 0; // 遇到敵人後重置計數器
+                } else {
+                    cout << "地下城一片寧靜... 什麼也沒有找到。\n"<<endl;;
+                    consecutiveNothingFound++; // 增加什麼都沒找到的計數器
+                }
+            } else {
+                // 連續兩次什麼都沒找到，這次強制遇到敵人
+                Character enemy = generateEnemy(player.getLevelValue());
                 cout << "\n遇到敵人: " << enemy.getName() << endl;
                 battle(player, enemy);
-            } else {
-                cout << "地下城一片寧靜... 什麼也沒有找到。\n"<<endl;;
+                consecutiveNothingFound = 0; // 遇到敵人後重置計數器
             }
         } else if (choice == 2) {
             while (true) {
-                player.displayInventory(); // 內部已正確使用 inventory_
+                player.displayInventory();
                 cout << "選擇一個選項: ";
                 int itemChoice;
                 cin >> itemChoice;
-                if (itemChoice == player.getInventory().size() + 1) { // 使用 getInventory().size()
+                if (itemChoice == player.getInventory().size() + 1) {
                     break;
                 } else {
-                    player.useItem(itemChoice - 1); // 內部已正確操作 inventory_
+                    player.useItem(itemChoice - 1);
                 }
             }
         } else if (choice == 3) {
-            player.displayEquippedWeapon(); // 內部已正確使用 equippedWeapon_
+            player.displayEquippedWeapon();
         } else if (choice == 4) {
             cout << "退出遊戲。期待再次挑戰地下城!\n";
             break;

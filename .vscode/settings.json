@@ -3,6 +3,8 @@
         "typeinfo": "cpp",
         "ctime": "cpp",
         "cstdlib": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "iostream": "cpp",
+        "ostream": "cpp"
     }
 }

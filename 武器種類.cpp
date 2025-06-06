@@ -439,6 +439,27 @@ Character generateEnemy(int playerLevel) {
     
 }
 
+// 新增處理物品掉落的函式
+void handleItemDrop(Character& player, const string& itemName, Item* droppedItem, const string& icon) {
+    char choice;
+    bool validInput = false;
+    while (!validInput) {
+        cout << icon << " 敵人掉落了" << itemName << "，要撿起來嗎？（y/n）：";
+        cin >> choice;
+        if (choice == 'y' || choice == 'Y') {
+            player.addItem(droppedItem);
+            cout << "你撿到了 " << itemName << "！\n";
+            validInput = true;
+        } else if (choice == 'n' || choice == 'N') {
+            cout << "你選擇不撿起" << itemName << "。\n";
+            delete droppedItem; // 如果不撿取，就刪除這個物品
+            validInput = true;
+        } else {
+            cout << "無效選擇，請重新輸入。\n";
+        }
+    }
+}
+
 // 戰鬥系統
 void battle(Character& player, Character& enemy) {
     cout << "一隻 " << enemy.getName() << " 出現了！\n" << endl;
@@ -558,139 +579,33 @@ void battle(Character& player, Character& enemy) {
             cout << enemy.getName() << " 被擊敗了！\n" << endl;
             // 根據敵人掉落不同的物品
             string enemyName = enemy.getName();
-            char choice;
-            bool validInput = false;
 
             // 判斷是否為哥布林類型的敵人
             bool isGoblinEnemy = (enemyName == "哥布林士兵" || enemyName == "哥布林弓箭手" || enemyName == "哥布林狂戰士" || enemyName.rfind("哥布林 (等級", 0) == 0);
 
             if (enemyName == "哥布林士兵") {
-                while (!validInput) {
-                    cout << "🗡️ 敵人掉落了一把劍，要撿起來嗎？（y/n）：";
-                    cin >> choice;
-                    if (choice == 'y' || choice == 'Y') {
-                        player.addItem(new Weapon("劍", 15, 3, 2));
-                        cout << "你撿到了 劍！\n";
-                        validInput = true;
-                    } else if (choice == 'n' || choice == 'N') {
-                        cout << "你選擇不撿起劍。\n";
-                        validInput = true;
-                    } else {
-                        cout << "無效選擇，請重新輸入。\n";
-                    }
-                }
+                handleItemDrop(player, "劍", new Weapon("劍", 15, 3, 2), "🗡️");
             } else if (enemyName == "哥布林弓箭手") {
-                while (!validInput) {
-                    cout << "🏹 敵人掉落了一把弓，要撿起來嗎？（y/n）：";
-                    cin >> choice;
-                    if (choice == 'y' || choice == 'Y') {
-                        player.addItem(new Bow("短弓", 12, 5, 2));
-                        cout << "你撿到了 短弓！\n";
-                        validInput = true;
-                    } else if (choice == 'n' || choice == 'N') {
-                        cout << "你選擇不撿起弓。\n";
-                        validInput = true;
-                    } else {
-                        cout << "無效選擇，請重新輸入。\n";
-                    }
-                }
+                handleItemDrop(player, "短弓", new Bow("短弓", 12, 5, 2), "🏹");
             } else if (enemyName == "哥布林狂戰士") {
-                while (!validInput) {
-                    cout << "🪓 敵人掉落了一把斧頭，要撿起來嗎？（y/n）：";
-                    cin >> choice;
-                    if (choice == 'y' || choice == 'Y') {
-                        player.addItem(new Axe("石斧", 18, 4, 3));
-                        cout << "你撿到了 石斧！\n";
-                        validInput = true;
-                    } else if (choice == 'n' || choice == 'N') {
-                        cout << "你選擇不撿起斧頭。\n";
-                        validInput = true;
-                    } else {
-                        cout << "無效選擇，請重新輸入。\n";
-                    }
-                }
+                handleItemDrop(player, "石斧", new Axe("石斧", 18, 4, 3), "🪓");
             }
             // 哥布林敵人有機會掉落藥水
             else if (isGoblinEnemy) {
                 int potionDropChance = rand() % 100;
-                if (potionDropChance < 0) { // 30% 機率掉落治療藥水
-                    while (!validInput) {
-                        cout << "🧪 敵人掉落了治療藥水，要撿起來嗎？（y/n）：";
-                        cin >> choice;
-                        if (choice == 'y' || choice == 'Y') {
-                            player.addItem(new HealthPotion("治療藥水", 20));
-                            cout << "你撿到了 治療藥水！\n";
-                            validInput = true;
-                        } else if (choice == 'n' || choice == 'N') {
-                            cout << "你選擇不撿起治療藥水。\n";
-                            validInput = true;
-                        } else {
-                            cout << "無效選擇，請重新輸入。\n";
-                        }
-                    }
+                if (potionDropChance < 30) { // 30% 機率掉落治療藥水
+                    handleItemDrop(player, "治療藥水", new HealthPotion("治療藥水", 20), "🧪");
                 } else if (potionDropChance < 50) { // 20% 機率掉落毒藥水 (累積機率 30+20=50%)
-                    while (!validInput) {
-                        cout << "☠️ 敵人掉落了毒藥水，要撿起來嗎？（y/n）：";
-                        cin >> choice;
-                        if (choice == 'y' || choice == 'Y') {
-                            player.addItem(new PoisonPotion("毒藥水", 3)); // 持續 3 回合
-                            cout << "你撿到了 毒藥水！\n";
-                            validInput = true;
-                        } else if (choice == 'n' || choice == 'N') {
-                            cout << "你選擇不撿起毒藥水。\n";
-                            validInput = true;
-                        } else {
-                            cout << "無效選擇，請重新輸入。\n";
-                        }
-                    }
+                    handleItemDrop(player, "毒藥水", new PoisonPotion("毒藥水", 3), "☠️"); // 持續 3 回合
                 } else if (potionDropChance < 70) { // 20% 機率掉落強化藥水 (累積機率 50+20=70%)
-                    while (!validInput) {
-                        cout << "💪 敵人掉落了強化藥水，要撿起來嗎？（y/n）：";
-                        cin >> choice;
-                        if (choice == 'y' || choice == 'Y') {
-                            player.addItem(new StrengthPotion("強化藥水", 5)); // 攻擊力加成 5
-                            cout << "你撿到了 強化藥水！\n";
-                            validInput = true;
-                        } else if (choice == 'n' || choice == 'N') {
-                            cout << "你選擇不撿起強化藥水。\n";
-                            validInput = true;
-                        } else {
-                            cout << "無效選擇，請重新輸入。\n";
-                        }
-                    }
+                    handleItemDrop(player, "強化藥水", new StrengthPotion("強化藥水", 5), "💪"); // 攻擊力加成 5
                 } else if (potionDropChance < 90) { // 20% 機率掉落爆炸藥水 (累積機率 70+20=90%)
-                    while (!validInput) {
-                        cout << "💥 敵人掉落了爆炸藥水，要撿起來嗎？（y/n）：";
-                        cin >> choice;
-                        if (choice == 'y' || choice == 'Y') {
-                            player.addItem(new ExplosionPotion("爆炸藥水", 20)); // 造成 20 點傷害
-                            cout << "你撿到了 爆炸藥水！\n";
-                            validInput = true;
-                        } else if (choice == 'n' || choice == 'N') {
-                            cout << "你選擇不撿起爆炸藥水。\n";
-                            validInput = true;
-                        } else {
-                            cout << "無效選擇，請重新輸入。\n";
-                        }
-                    }
+                    handleItemDrop(player, "爆炸藥水", new ExplosionPotion("爆炸藥水", 20), "💥"); // 造成 20 點傷害
                 } else { // 10% 機率什麼都沒掉落 (累積機率 90+10=100%)
                     cout << "敵人什麼也沒掉落。\n";
                 }
             } else { // 其他非哥布林敵人，預設只掉落治療藥水
-                while (!validInput) {
-                    cout << "🧪 敵人掉落了治療藥水，要撿起來嗎？（y/n）：";
-                    cin >> choice;
-                    if (choice == 'y' || choice == 'Y') {
-                        player.addItem(new HealthPotion("治療藥水", 20));
-                        cout << "你撿到了 治療藥水！\n";
-                        validInput = true;
-                    } else if (choice == 'n' || choice == 'N') {
-                        cout << "你選擇不撿起治療藥水。\n";
-                        validInput = true;
-                    } else {
-                        cout << "無效選擇，請重新輸入。\n";
-                    }
-                }
+                handleItemDrop(player, "治療藥水", new HealthPotion("治療藥水", 20), "🧪");
             }
             player.gainExperience(4 + player.getLevelValue());
             break;

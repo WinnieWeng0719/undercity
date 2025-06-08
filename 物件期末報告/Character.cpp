@@ -1,9 +1,7 @@
 #include "Character.h"
-#include "Item.h"     // 包含 Item.h 因為 Character 類別會使用到 Item 物件
-#include "Weapon.h"   // 包含 Weapon.h 因為 Character 類別會使用到 Weapon 物件
-#include "Potion.h"   // 包含 Potion.h 因為 Character 類別會使用到 Potion 物件
-#include <iostream> // for std::cout, std::endl
-#include <algorithm> // for std::max
+#include "Item.h"    // 需要 Item 類別的完整定義
+// 注意：這裡不需要額外包含 Weapon.h 或 Potion.h，因為 Item.h 已經包含了它們的宣告，
+// 且 Character.cpp 中對 Weapon 和 Potion 的操作都是透過 Item 指標和 dynamic_cast 進行的。
 
 Character::Character(std::string n, int h, int a, int d)
     : name_(n), health_(h), attack_(a), defense_(d), experience_(0), level_(1), equippedWeapon_(nullptr),
@@ -15,7 +13,7 @@ Character::~Character() {
         delete item;
     }
     inventory_.clear();
-    equippedWeapon_ = nullptr;
+    equippedWeapon_ = nullptr; // 確保指標為空
 }
 
 void Character::takeDamage(int damage) {
@@ -86,12 +84,12 @@ void Character::useItem(int index, Character& targetCharacter) {
                 }
             }
         }
-        else {
+        else { // 如果是藥水，則應用效果
             Potion* potion = dynamic_cast<Potion*>(item);
             if (potion) {
-                potion->applyEffect(targetCharacter, *this);
+                potion->applyEffect(targetCharacter, *this); // 傳入目標角色和玩家自己
                 inventory_.erase(inventory_.begin() + index);
-                delete item;
+                delete item; // 釋放藥水記憶體
             }
         }
     }
@@ -166,7 +164,7 @@ void Character::removeItemFromInventory(int index) {
 }
 
 void Character::applyPoison(int turns) {
-    if (poisonTurns_ == 0) {
+    if (poisonTurns_ == 0) { // 如果沒有中毒，則施加中毒效果
         std::cout << name_ << " 中毒了！\n";
     }
     poisonTurns_ = turns;
@@ -174,7 +172,7 @@ void Character::applyPoison(int turns) {
 
 void Character::takePoisonDamage() {
     if (poisonTurns_ > 0) {
-        int poisonDmg = 5;
+        int poisonDmg = 5; // 每回合毒素傷害
         health_ -= poisonDmg;
         std::cout << name_ << " 因中毒減少了 " << poisonDmg << " 點生命！\n";
         poisonTurns_--;
@@ -185,7 +183,7 @@ void Character::takePoisonDamage() {
 }
 
 void Character::applyStrength(int bonus, int turns) {
-    if (strengthTurns_ == 0) {
+    if (strengthTurns_ == 0) { // 如果沒有強化，則施加強化效果
         std::cout << name_ << " 獲得了強化！\n";
     }
     else {
@@ -199,7 +197,7 @@ void Character::decreaseStrengthTurns() {
     if (strengthTurns_ > 0) {
         strengthTurns_--;
         if (strengthTurns_ == 0) {
-            strengthBonus_ = 0;
+            strengthBonus_ = 0; // 效果結束，移除攻擊力加成
             std::cout << name_ << " 的強化狀態已解除。\n";
         }
     }

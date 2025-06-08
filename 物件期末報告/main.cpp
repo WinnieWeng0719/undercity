@@ -1,16 +1,11 @@
 #include <iostream>
-#include <vector>
-#include <ctime>
-#include <cstdlib>
-#include <sstream>
+#include <ctime>   // For time()
+#include <cstdlib> // For srand()
 #include <string>
-#include <algorithm> // for std::max
 
-#include "Item.h"
-#include "Weapon.h"
-#include "Potion.h"
-#include "Character.h"
-#include "game_functions.h" // 包含遊戲相關函式
+#include "Character.h"       // 引入 Character 類別
+#include "Item.h"            // 引入 Item 類別及其子類別
+#include "game_functions.h"  // 引入遊戲函式
 
 int main() {
     srand(time(0));
@@ -31,11 +26,13 @@ int main() {
             std::cout << "#-------------#";
             std::cout << "\n玩家進入地下城..." << std::endl;
 
+            // 顯示玩家資訊
             std::cout << "\n玩家資訊" << std::endl;
             std::cout << "等級: " << player.getLevelValue() << std::endl
                 << "攻擊力: " << player.getAttackValue()
                 << " 生命值: " << player.getHealth()
                 << " 防禦力: " << player.getDefense() << "\n" << std::endl;
+
 
             if (consecutiveNothingFound < 2) {
                 if (rand() % 3 == 0) { // 33% 機率遇到敵人
@@ -50,6 +47,7 @@ int main() {
                 }
             }
             else {
+                // 連續兩次什麼都沒找到，這次強制遇到敵人
                 Character enemy = generateEnemy(player.getLevelValue());
                 std::cout << "\n遇到敵人: " << enemy.getName() << std::endl;
                 battle(player, enemy);
@@ -60,7 +58,7 @@ int main() {
             while (true) {
                 if (player.getInventory().empty()) {
                     std::cout << "\n物品清單是空的！\n" << std::endl;
-                    break;
+                    break; // 如果背包空了，就直接退出循環
                 }
                 player.displayItemList();
                 std::cout << "選擇一個選項: ";
@@ -70,12 +68,13 @@ int main() {
                     break;
                 }
                 else {
+                    // 使用物品時，需要判斷目標
                     Item* selectedItem = player.getInventory()[itemChoice - 1];
                     if (dynamic_cast<PoisonPotion*>(selectedItem) || dynamic_cast<ExplosionPotion*>(selectedItem)) {
-                        std::cout << "此藥水僅在戰鬥中使用！\n";
+                        std::cout << "此藥水僅在戰鬥中使用！\n"; // 這些藥水只能在戰鬥中對敵人使用
                     }
                     else {
-                        player.useItem(itemChoice - 1, player);
+                        player.useItem(itemChoice - 1, player); // 對自己使用
                     }
                 }
             }

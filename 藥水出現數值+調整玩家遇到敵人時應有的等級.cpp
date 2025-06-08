@@ -8,13 +8,6 @@
 
 using namespace std;
 
-// 自訂的 to_string 函式，用於將數字轉換為字串
-//template <typename T>
-//std::string to_string_custom(const T& value) {
-//    std::stringstream ss;
-//    ss << value;
-//    return ss.str();
-//}
 
 // 物品類別
 class Item {
@@ -197,7 +190,7 @@ public:
     void displayStats() const {
         cout << name_ << " - 目前血量: " << health_ << " 攻擊：" << attack_;
         if (strengthTurns_ > 0) {
-            cout << "狀態 :"<< endl <<" 強化中，剩餘(" << strengthTurns_ << "回合)";
+            cout << "狀態 :" << endl << " 強化中，剩餘(" << strengthTurns_ << "回合)";
         }
         if (poisonTurns_ > 0) {
             cout << "狀態 :" << endl << " 中毒中，剩餘(" << poisonTurns_ << "回合)";
@@ -206,7 +199,7 @@ public:
     }
 
     int getAttack() const {
-        return attack_ + (equippedWeapon_ ? equippedWeapon_->getValue() : 0) + strengthBonus_;
+        return attack_ + (equippedWeapon_ ? (0.5 * equippedWeapon_->getValue()) : 0) + strengthBonus_;
     }
 
     void displayItemList() const {
@@ -415,37 +408,51 @@ void ExplosionPotion::applyEffect(Character& target, Character& attacker) {
 // 隨機生成敵人
 Character generateEnemy(int playerLevel) {
     int enemyType = rand() % 100;
-    int level = rand() % 3 + 1;
-    if (playerLevel >= 12 && enemyType < 20) {
-        return Character("宇宙無敵超級深淵惡魔-龍龍", 500, rand() % 4 + 200, 20);    // 攻擊範圍 50 到 53
+
+    if (playerLevel >= 12) {
+        if (enemyType < 40) {
+            return Character("宇宙無敵超級深淵惡魔-龍龍", 500, rand() % 4 + 200, 20);
+        }
     }
-    else if (playerLevel >= 9 && enemyType < 30) {
-        return Character("你的作業", 250, rand() % 40 + 100, 10);    // 攻擊範圍 40 到 43
+
+    if (playerLevel >= 20) {
+        if (enemyType < 30) {
+            return Character("你的作業", 250, rand() % 40 + 100, 10);
+        }
     }
-    else if (playerLevel >= 6 && enemyType < 40) {
-        return Character("林克", 100, rand() % 25 + 80, 15);    // 攻擊範圍 30 到 33
+
+    if (playerLevel >= 9) {
+        if (enemyType < 40) {
+            return Character("林克", 100, rand() % 25 + 80, 15);
+        }
     }
-    else if (playerLevel >= 3 && enemyType < 50) {
-        return Character("芙莉蓮花", 50, rand() % 10 + 45, 5);    // 攻擊範圍 15 到 18
+
+    if (playerLevel >= 6) {
+        if (enemyType < 50) {
+            return Character("芙莉蓮花", 50, rand() % 10 + 60, 5);
+        }
     }
-    else if (enemyType < 60) {
+
+    // 新增：確保最低等級玩家只會遇到哥布林系
+    if (enemyType < 60) {
+        int level = rand() % 3 + 1;
         int health = (level == 1) ? 12 : (level == 2) ? 15 : 17;
         return Character("哥布林 (等級 " + to_string(level) + ")", health, rand() % 3 + 8, 1);
     }
     else if (enemyType < 70) {
-        return Character("哥布林士兵", 30, rand() % 4 + 10, 3);    // 哥布林士兵
+        return Character("哥布林士兵", 30, rand() % 4 + 10, 3);
     }
-    else if (enemyType < 80) { // 哥布林弓箭手
+    else if (enemyType < 80) {
         return Character("哥布林弓箭手", 25, rand() % 5 + 12, 2);
     }
-    else if (enemyType < 90) { // 哥布林狂戰士
+    else if (enemyType < 90) {
         return Character("哥布林狂戰士", 35, rand() % 6 + 18, 4);
     }
-    else {
-        int health = (level == 1) ? 12 : (level == 2) ? 15 : 17;
-        return Character("哥布林 (等級 " + to_string(level) + ")", health, rand() % 3 + 8, 1);
-    }
 
+    // 預設安全 fallback
+    int level = rand() % 3 + 1;
+    int health = (level == 1) ? 12 : (level == 2) ? 15 : 17;
+    return Character("哥布林 (等級 " + to_string(level) + ")", health, rand() % 3 + 8, 1);
 }
 
 // 新增處理物品掉落的函式
@@ -521,23 +528,23 @@ void battle(Character& player, Character& enemy) {
             damage = player.getAttack(); // 使用 getAttack() 包含武器和強化效果
             cout << player.getName() << " 選擇 [普通攻擊] ，造成了 " << damage << " 點傷害。\n";
             cout << enemy.getName() << " 的防禦力為他抵擋了 " << enemy.getDefense() << " 點傷害。\n";
-            cout <<endl<< enemy.getName() << " 受到了 " << max(0, damage - enemy.getDefense()) << " 點傷害。\n" << endl;
+            cout << endl << enemy.getName() << " 受到了 " << max(0, damage - enemy.getDefense()) << " 點傷害。\n" << endl;
             enemy.takeDamage(damage);
         }
         else if (action == 2) {
             damage = player.getAttack() * 2; // 使用 getAttack() 包含武器和強化效果
             cout << player.getName() << " 選擇 [強力攻擊] ，造成了 " << damage << " 點傷害。\n";
             cout << enemy.getName() << " 的防禦力抵擋了 " << enemy.getDefense() << " 點傷害。\n";
-            cout <<endl<< enemy.getName() << " 受到了 " << max(0, damage - enemy.getDefense()) << " 點傷害。\n" << endl;
+            cout << endl << enemy.getName() << " 受到了 " << max(0, damage - enemy.getDefense()) << " 點傷害。\n" << endl;
             enemy.takeDamage(damage);
         }
         else if (action == 3) {
             if (player.getEquippedWeapon() != nullptr) {
                 player.getEquippedWeapon()->use();
-                damage = player.getAttack(); // 使用 getAttack() 包含武器和強化效果
+                damage = 2 * player.getAttack() + (0.5 * player.getEquippedWeapon()->getValue()); // 使用 getAttack() 包含武器和強化效果
                 cout << player.getName() << " 使用 " << player.getEquippedWeapon()->getName() << " 攻擊，造成了 " << damage << " 點傷害。\n";
-                cout <<endl<< enemy.getName() << " 的防禦力抵擋了 " << enemy.getDefense() << " 點傷害。\n";
-                cout <<endl<< enemy.getName() << " 受到了 " << max(0, damage - enemy.getDefense()) << " 點傷害。\n" << endl;
+                cout << endl << enemy.getName() << " 的防禦力抵擋了 " << enemy.getDefense() << " 點傷害。\n";
+                cout << endl << enemy.getName() << " 受到了 " << max(0, damage - enemy.getDefense()) << " 點傷害。\n" << endl;
                 enemy.takeDamage(damage);
                 if (player.getEquippedWeapon()->isBroken()) {
                     cout << player.getEquippedWeapon()->getName() << " 損壞了！\n";
@@ -545,7 +552,7 @@ void battle(Character& player, Character& enemy) {
                 }
             }
             else {
-                cout << "玩家無裝備武器，無法使用武器攻擊。\n"<<endl;
+                cout << "玩家無裝備武器，無法使用武器攻擊。\n" << endl;
                 continue;
             }
         }
@@ -561,8 +568,13 @@ void battle(Character& player, Character& enemy) {
             if (itemChoice > 0 && itemChoice <= player.getInventory().size()) {
                 // 根據物品類型，決定對誰使用
                 Item* selectedItem = player.getInventory()[itemChoice - 1];
+                bool isExplosionPotionUsed = false; // 標記是否使用了爆炸藥水
+
                 if (dynamic_cast<PoisonPotion*>(selectedItem) || dynamic_cast<ExplosionPotion*>(selectedItem)) {
                     // 毒藥水和爆炸藥水用於敵人
+                    if (dynamic_cast<ExplosionPotion*>(selectedItem)) {
+                        isExplosionPotionUsed = true; // 如果是爆炸藥水，設定標記
+                    }
                     player.useItem(itemChoice - 1, enemy);
                 }
                 else if (dynamic_cast<HealthPotion*>(selectedItem) || dynamic_cast<StrengthPotion*>(selectedItem)) {
@@ -573,6 +585,56 @@ void battle(Character& player, Character& enemy) {
                     // 其他物品（如裝備）的預設處理
                     player.useItem(itemChoice - 1, player); // 對自己使用 (武器裝備)
                 }
+
+                // 處理爆炸藥水導致敵人死亡的邏輯
+                if (isExplosionPotionUsed && !enemy.isAlive()) {
+                    cout << enemy.getName() << " 被擊敗了!\n" << endl;
+                    // 根據敵人掉落不同的物品 (這部分保留原有的掉落邏輯)
+                    string enemyName = enemy.getName();
+
+                    // 判斷是否為哥布林類型的敵人
+                    bool isGoblinEnemy = (enemyName == "哥布林士兵" || enemyName == "哥布林弓箭手" || enemyName == "哥布林狂戰士" || enemyName.rfind("哥布林 (等級", 0) == 0);
+
+                    if (enemyName == "哥布林士兵") {
+                        handleItemDrop(player, "劍", new Weapon("劍", 15, 3, 2), "🗡️");
+                    }
+                    else if (enemyName == "哥布林弓箭手") {
+                        handleItemDrop(player, "短弓", new Bow("短弓", 12, 5, 2), "🏹");
+                    }
+                    else if (enemyName == "哥布林狂戰士") {
+                        handleItemDrop(player, "石斧", new Axe("石斧", 18, 2, 3), "🪓");
+                    }
+                    // 哥布林敵人有機會掉落藥水
+                    else if (isGoblinEnemy) {
+                        int potionDropChance = rand() % 100;
+
+                        if (potionDropChance < 35) { //  治療藥水：35%
+                            handleItemDrop(player, "治療藥水", new HealthPotion("治療藥水", 20), "🧪");
+                        }
+                        else if (potionDropChance < 55) { // 毒藥水：20%
+                            handleItemDrop(player, "毒藥水", new PoisonPotion("毒藥水", 3), "☠️");
+                        }
+                        else if (potionDropChance < 75) { // 強化藥水：20%
+                            handleItemDrop(player, "強化藥水", new StrengthPotion("強化藥水", 5), "💪");
+                        }
+                        else if (potionDropChance < 95) { // 爆炸藥水：20%
+                            handleItemDrop(player, "爆炸藥水", new ExplosionPotion("爆炸藥水", 40), "💥");
+                        }
+                        else { // 剩下 5%：無掉落
+                            cout << "敵人什麼也沒掉落。\n" << endl;
+                        }
+                    }
+
+                    else { // 其他非哥布林敵人，預設只掉落治療藥水
+                        handleItemDrop(player, "治療藥水", new HealthPotion("治療藥水", 20), "🧪");
+                    }
+                    player.gainExperience(4 + player.getLevelValue());
+                    break; // 敵人死亡，結束戰鬥
+                }
+                else {
+                    continue; // 如果使用其他物品或者爆炸藥水未殺死敵人，則繼續戰鬥
+                }
+
             }
             else if (itemChoice == player.getInventory().size() + 1) {
                 cout << "退出物品清單。\n";
@@ -582,7 +644,6 @@ void battle(Character& player, Character& enemy) {
                 cout << "無效的選項。\n";
                 continue;
             }
-            continue; // 使用物品後跳過本回合的攻擊
         }
         else {
             cout << "無效的動作。\n";
@@ -590,7 +651,7 @@ void battle(Character& player, Character& enemy) {
         }
 
         if (!enemy.isAlive()) {
-            cout << enemy.getName() << " 被擊敗了!\n" <<endl;
+            cout << enemy.getName() << " 被擊敗了!\n" << endl;
             // 根據敵人掉落不同的物品
             string enemyName = enemy.getName();
 
@@ -604,15 +665,15 @@ void battle(Character& player, Character& enemy) {
                 handleItemDrop(player, "短弓", new Bow("短弓", 12, 5, 2), "🏹");
             }
             else if (enemyName == "哥布林狂戰士") {
-                handleItemDrop(player, "石斧", new Axe("石斧", 18, 4, 3), "🪓");
+                handleItemDrop(player, "石斧", new Axe("石斧", 18, 2, 3), "🪓");
             }
             // 哥布林敵人有機會掉落藥水
             else if (isGoblinEnemy) {
                 int potionDropChance = rand() % 100;
-                if (potionDropChance < 30) { // 30% 機率掉落治療藥水
+                if (potionDropChance < 0) { // 30% 機率掉落治療藥水
                     handleItemDrop(player, "治療藥水", new HealthPotion("治療藥水", 20), "🧪");
                 }
-                else if (potionDropChance < 50) { // 20% 機率掉落毒藥水 (累積機率 30+20=50%)
+                else if (potionDropChance < 30) { // 20% 機率掉落毒藥水 (累積機率 30+20=50%)
                     handleItemDrop(player, "毒藥水", new PoisonPotion("毒藥水", 3), "☠️"); // 持續 3 回合
                 }
                 else if (potionDropChance < 70) { // 20% 機率掉落強化藥水 (累積機率 50+20=70%)
@@ -622,7 +683,7 @@ void battle(Character& player, Character& enemy) {
                     handleItemDrop(player, "爆炸藥水", new ExplosionPotion("爆炸藥水", 40), "💥"); // 造成 20 點傷害
                 }
                 else { // 10% 機率什麼都沒掉落 (累積機率 90+10=100%)
-                    cout << "敵人什麼也沒掉落。\n"<<endl;
+                    cout << "敵人什麼也沒掉落。\n" << endl;
                 }
             }
             else { // 其他非哥布林敵人，預設只掉落治療藥水
@@ -638,12 +699,12 @@ void battle(Character& player, Character& enemy) {
 
         cout << enemy.getName() << " 攻擊了玩家，造成了 " << damage << " 點傷害。" << endl;
         cout << player.getName() << " 的防禦力抵擋了 " << player.getDefense() << " 點傷害。\n";
-        cout <<endl<< player.getName() << " 受到了 " << max(0, damage - player.getDefense()) << " 點傷害。\n" << endl;
+        cout << endl << player.getName() << " 受到了 " << max(0, damage - player.getDefense()) << " 點傷害。\n" << endl;
 
     }
 
     if (!player.isAlive()) {
-        cout << "GAME OVER。" << endl;
+        cout <<endl<< "GAME OVER。" << endl;
     }
 }
 
@@ -652,7 +713,7 @@ void showMenu() {
     cout << "╔═══════════════════════╗" << endl;
     cout << "║         主選單        ║" << endl;
     cout << "╚═══════════════════════╝" << endl;
-    cout << "1. 探索地下城\n2. 查看物品清單\n3. 查看裝備武器\n4. 卸下裝備\n5. 退出遊戲\n選擇一個選項: "<<endl;
+    cout << "1. 探索地下城\n2. 查看物品清單\n3. 查看裝備武器\n4. 卸下裝備\n5. 退出遊戲\n選擇一個選項: " << endl;
 }
 
 int main() {
@@ -660,7 +721,7 @@ int main() {
 
     Character player("玩家", 21, 10, 3);
     cout << "歡迎來到地下城" << endl;
-    cout << endl << "玩家資訊"<<endl<<
+    cout << endl << "玩家資訊" << endl <<
         "等級: " << player.getLevelValue() << endl << "攻擊力: " << player.getAttackValue() << " 生命值: " << player.getHealth() << " 防禦力: " << player.getDefense() << endl;
 
     int consecutiveNothingFound = 0;
@@ -676,7 +737,7 @@ int main() {
 
             // 顯示玩家資訊
             cout << "\n玩家資訊" << endl;
-            cout << "等級: " << player.getLevelValue()<<endl
+            cout << "等級: " << player.getLevelValue() << endl
                 << "攻擊力: " << player.getAttackValue()
                 << " 生命值: " << player.getHealth()
                 << " 防禦力: " << player.getDefense() << "\n" << endl;

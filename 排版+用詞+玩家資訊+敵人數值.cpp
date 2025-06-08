@@ -8,13 +8,6 @@
 
 using namespace std;
 
-// 自訂的 to_string 函式，用於將數字轉換為字串
-//template <typename T>
-//std::string to_string_custom(const T& value) {
-//    std::stringstream ss;
-//    ss << value;
-//    return ss.str();
-//}
 
 // 物品類別
 class Item {
@@ -206,7 +199,7 @@ public:
     }
 
     int getAttack() const {
-        return attack_ + (equippedWeapon_ ? equippedWeapon_->getValue() : 0) + strengthBonus_;
+        return attack_ + (equippedWeapon_ ?(0.5*equippedWeapon_->getValue()) : 0) + strengthBonus_;
     }
 
     void displayItemList() const {
@@ -529,7 +522,7 @@ void battle(Character& player, Character& enemy) {
         else if (action == 3) {
             if (player.getEquippedWeapon() != nullptr) {
                 player.getEquippedWeapon()->use();
-                damage = player.getAttack(); // 使用 getAttack() 包含武器和強化效果
+                damage = player.getAttack()*2+(0.5*player.getEquippedWeapon()->getValue()); // 使用 getAttack() 包含武器和強化效果
                 cout << player.getName() << " 使用 " << player.getEquippedWeapon()->getName() << " 攻擊，造成了 " << damage << " 點傷害。\n";
                 cout <<endl<< enemy.getName() << " 的防禦力抵擋了 " << enemy.getDefense() << " 點傷害。\n";
                 cout <<endl<< enemy.getName() << " 受到了 " << max(0, damage - enemy.getDefense()) << " 點傷害。\n" << endl;

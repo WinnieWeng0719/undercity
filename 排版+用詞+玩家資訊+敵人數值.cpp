@@ -438,14 +438,9 @@ Character generateEnemy(int playerLevel) {
     else if (enemyType < 80) { // 哥布林弓箭手
         return Character("哥布林弓箭手", 25, rand() % 5 + 12, 2);
     }
-    else if (enemyType < 90) { // 哥布林狂戰士
+    else { // 哥布林狂戰士
         return Character("哥布林狂戰士", 35, rand() % 6 + 18, 4);
     }
-    else {
-        int health = (level == 1) ? 12 : (level == 2) ? 15 : 17;
-        return Character("哥布林 (等級 " + to_string(level) + ")", health, rand() % 3 + 8, 1);
-    }
-
 }
 
 // 新增處理物品掉落的函式
@@ -582,7 +577,7 @@ void battle(Character& player, Character& enemy) {
                 cout << "無效的選項。\n";
                 continue;
             }
-            continue; // 使用物品後跳過本回合的攻擊
+            
         }
         else {
             cout << "無效的動作。\n";
@@ -609,10 +604,10 @@ void battle(Character& player, Character& enemy) {
             // 哥布林敵人有機會掉落藥水
             else if (isGoblinEnemy) {
                 int potionDropChance = rand() % 100;
-                if (potionDropChance < 30) { // 30% 機率掉落治療藥水
+                if (potionDropChance < 0) { // 30% 機率掉落治療藥水
                     handleItemDrop(player, "治療藥水", new HealthPotion("治療藥水", 20), "🧪");
                 }
-                else if (potionDropChance < 50) { // 20% 機率掉落毒藥水 (累積機率 30+20=50%)
+                else if (potionDropChance < 30) { // 20% 機率掉落毒藥水 (累積機率 30+20=50%)
                     handleItemDrop(player, "毒藥水", new PoisonPotion("毒藥水", 3), "☠️"); // 持續 3 回合
                 }
                 else if (potionDropChance < 70) { // 20% 機率掉落強化藥水 (累積機率 50+20=70%)

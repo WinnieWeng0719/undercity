@@ -3,17 +3,17 @@
 #include <cstdlib> // For srand()
 #include <string>
 
-#include "Character.h"       // �ޤJ Character ���O
-#include "./Item.h" // �T�O�]�t�ɮת����|���T           // �ޤJ Item ���O�Ψ�l���O
-#include "./game_funtion.h"  // �ޤJ�C���禡
+#include "Character.h"       // 引入 Character 類別
+#include "./Item.h" // 確保包含檔案的路徑正確           // 引入 Item 類別及其子類別
+#include "./game_funtion.h"  // 引入遊戲函式
 using namespace std;
 int main() {
     srand(time(0));
 
-    Character player("���a", 21, 10, 3);
-    std::cout << "�w��Ө�a�U��" << std::endl;
-    std::cout << std::endl << "���a��T" << std::endl <<
-        "����: " << player.getLevelValue() << std::endl << "�����O: " << player.getAttackValue() << " �ͩR��: " << player.getHealth() << " ���m�O: " << player.getDefense() << std::endl;
+    Character player("玩家", 21, 10, 3);
+    std::cout << "歡迎來到地下城" << std::endl;
+    std::cout << std::endl << "玩家資訊" << std::endl <<
+        "等級: " << player.getLevelValue() << std::endl << "攻擊力: " << player.getAttackValue() << " 生命值: " << player.getHealth() << " 防禦力: " << player.getDefense() << std::endl;
 
     int consecutiveNothingFound = 0;
 
@@ -24,32 +24,32 @@ int main() {
 
         if (choice == 1) {
             std::cout << "#-------------#";
-            std::cout << "\n���a�i�J�a�U��..." << std::endl;
+            std::cout << "\n玩家進入地下城..." << std::endl;
 
-            // ��ܪ��a��T
-            std::cout << "\n���a��T" << std::endl;
-            std::cout << "����: " << player.getLevelValue() << std::endl
-                << "�����O: " << player.getAttackValue()
-                << " �ͩR��: " << player.getHealth()
-                << " ���m�O: " << player.getDefense() << "\n" << std::endl;
+            // 顯示玩家資訊
+            std::cout << "\n玩家資訊" << std::endl;
+            std::cout << "等級: " << player.getLevelValue() << std::endl
+                << "攻擊力: " << player.getAttackValue()
+                << " 生命值: " << player.getHealth()
+                << " 防禦力: " << player.getDefense() << "\n" << std::endl;
 
 
             if (consecutiveNothingFound < 2) {
-                if (rand() % 3 == 0) { // 33% ���v�J��ĤH
+                if (rand() % 3 == 0) { // 33% 機率遇到敵人
                     Character enemy = generateEnemy(player.getLevelValue());
-                    std::cout << "\n�J��ĤH: " << enemy.getName() << std::endl;
+                    std::cout << "\n遇到敵人: " << enemy.getName() << std::endl;
                     battle(player, enemy);
                     consecutiveNothingFound = 0;
                 }
                 else {
-                    std::cout << "�a�U���@�����R... \n" << std::endl;;
+                    std::cout << "地下城一片寧靜... \n" << std::endl;;
                     consecutiveNothingFound++;
                 }
             }
             else {
-                // �s��⦸���򳣨S���A�o���j��J��ĤH
+                // 連續兩次什麼都沒找到，這次強制遇到敵人
                 Character enemy = generateEnemy(player.getLevelValue());
-                std::cout << "\n�J��ĤH: " << enemy.getName() << std::endl;
+                std::cout << "\n遇到敵人: " << enemy.getName() << std::endl;
                 battle(player, enemy);
                 consecutiveNothingFound = 0;
             }
@@ -57,24 +57,24 @@ int main() {
         else if (choice == 2) {
             while (true) {
                 if (player.getInventory().empty()) {
-                    std::cout << "\n���~�M��O�Ū��I\n" << std::endl;
-                    break; // �p�G�I�]�ŤF�A�N�����h�X�`��
+                    std::cout << "\n物品清單是空的！\n" << std::endl;
+                    break; // 如果背包空了，就直接退出循環
                 }
                 player.displayItemList();
-                std::cout << "��ܤ@�ӿﶵ: ";
+                std::cout << "選擇一個選項: ";
                 int itemChoice;
                 std::cin >> itemChoice;
                 if (itemChoice == player.getInventory().size() + 1) {
                     break;
                 }
                 else {
-                    // �ϥΪ��~�ɡA�ݭn�P�_�ؼ�
+                    // 使用物品時，需要判斷目標
                     Item* selectedItem = player.getInventory()[itemChoice - 1];
                     if (dynamic_cast<PoisonPotion*>(selectedItem) || dynamic_cast<ExplosionPotion*>(selectedItem)) {
-                        std::cout << "���Ĥ��Ȧb�԰����ϥΡI\n"; // �o���Ĥ��u��b�԰�����ĤH�ϥ�
+                        std::cout << "此藥水僅在戰鬥中使用！\n"; // 這些藥水只能在戰鬥中對敵人使用
                     }
                     else {
-                        player.useItem(itemChoice - 1, player); // ��ۤv�ϥ�
+                        player.useItem(itemChoice - 1, player); // 對自己使用
                     }
                 }
             }
@@ -86,11 +86,11 @@ int main() {
             player.unequipWeapon();
         }
         else if (choice == 5) {
-            std::cout << "�h�X�C���C���ݦA���D�Ԧa�U��!\n";
+            std::cout << "退出遊戲。期待再次挑戰地下城!\n";
             break;
         }
         else {
-            std::cout << "�L�Ī��ﶵ�A�ЦA�դ@���C\n";
+            std::cout << "無效的選項，請再試一次。\n";
         }
 
         if (!player.isAlive()) {

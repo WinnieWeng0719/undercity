@@ -6,6 +6,8 @@
 #include "Character.h"       // 引入 Character 類別
 #include "./Item.h" // 確保包含檔案的路徑正確           // 引入 Item 類別及其子類別
 #include "./game_funtion.h"  // 引入遊戲函式
+#include "./Weapon.h"
+#include "./Potion.h"
 using namespace std;
 int main() {
     srand(time(0));

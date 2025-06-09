@@ -1,4 +1,0 @@
-cd "/Users/WinnieWeng/Desktop/物件期末報告/" && clang++ Potion.cpp Item.cpp Character.cpp Weapon.cpp main.cpp game_functions.cpp -o 成果 -std=c++17 && "/Users/WinnieWeng/Desktop/物件期末報告/"成果
-
-
-cd "/Users/WinnieWeng/Desktop/物件報告/物件期末報告/" && clang++ Item.cpp Character.cpp main.cpp game_functions.cpp -o 主要成果 -std=c++17 && "/Users/WinnieWeng/Desktop/物件報告/物件期末報告/"主要成果

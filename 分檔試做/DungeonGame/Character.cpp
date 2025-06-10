@@ -38,10 +38,10 @@ void Character::addItem(Item* item) {
 void Character::displayStats() const {
     std::cout << name_ << " - 目前血量: " << health_ << " 攻擊：" << attack_;
     if (strengthTurns_ > 0) {
-        std::cout << "狀態 :" << std::endl << " 強化中，剩餘(" << strengthTurns_ << "回合)";
+        std::cout << "\n狀態 :" << std::endl << " 強化中，剩餘(" << strengthTurns_ << "回合)";
     }
     if (poisonTurns_ > 0) {
-        std::cout << "狀態 :" << std::endl << " 中毒中，剩餘(" << poisonTurns_ << "回合)";
+        std::cout << "\n狀態 :" << std::endl << " 中毒中，剩餘(" << poisonTurns_ << "回合)";
     }
     std::cout << std::endl;
 }

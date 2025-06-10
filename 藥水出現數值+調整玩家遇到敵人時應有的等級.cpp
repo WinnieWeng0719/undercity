@@ -190,10 +190,10 @@ public:
     void displayStats() const {
         cout << name_ << " - 目前血量: " << health_ << " 攻擊：" << attack_;
         if (strengthTurns_ > 0) {
-            cout << "狀態 :" << endl << " 強化中，剩餘(" << strengthTurns_ << "回合)";
+            cout << "\n狀態 :" << endl << " 強化中，剩餘(" << strengthTurns_ << "回合)";
         }
         if (poisonTurns_ > 0) {
-            cout << "狀態 :" << endl << " 中毒中，剩餘(" << poisonTurns_ << "回合)";
+            cout << "\n狀態 :" << endl << " 中毒中，剩餘(" << poisonTurns_ << "回合)";
         }
         cout << endl;
     }
@@ -411,25 +411,25 @@ Character generateEnemy(int playerLevel) {
 
     if (playerLevel >= 15) {
         if (enemyType < 20) {
-            return Character("宇宙無敵超級深淵惡魔-龍龍", 500, rand() % 4 + 200, 20);
+            return Character("你的作業", 250, rand() % 4 + 100, 20);
         }
     }
 
     if (playerLevel >= 12) {
         if (enemyType < 30) {
-            return Character("你的作業", 250, rand() % 40 + 100, 10);
+            return Character("宇宙無敵超級深淵惡魔-龍龍", 150, rand() % 40 + 80, 10);
         }
     }
 
     if (playerLevel >= 9) {
         if (enemyType < 40) {
-            return Character("林克", 100, rand() % 25 + 80, 15);
+            return Character("林克", 90, rand() % 25 + 60, 15);
         }
     }
 
     if (playerLevel >= 6) {
         if (enemyType < 50) {
-            return Character("芙莉蓮花", 50, rand() % 10 + 60, 5);
+            return Character("芙莉蓮花", 50, rand() % 10 + 40, 5);
         }
     }
 
@@ -764,8 +764,9 @@ int main() {
 
                 // 判斷是否打敗的是 "你的作業"
                 if (enemy.getName() == "你的作業" && !enemy.isAlive()) {
-                    cout << "\n🎉 恭喜你戰勝了『你的作業』！你已經完成了冒險的最大挑戰！" << endl;
-                    cout << "🏆 遊戲結束，感謝你的遊玩！\n" << endl;
+                    cout << "\n🎉 恭喜玩家擊敗了最硬敵人『你的作業』！玩家已經完成了地下城的最大挑戰！" << endl;
+                    cout << "🏆 地下城遊戲結束，感謝玩家的挑戰！\n" << endl;
+                    cout << "玩家離開地下城" << endl;
                     break; // 結束主遊戲迴圈
                 }
             }

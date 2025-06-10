@@ -10,25 +10,25 @@ Character generateEnemy(int playerLevel) {
 
     if (playerLevel >= 20) {
         if (enemyType < 30) {
-            return Character("你的作業", 500, rand() % 40 + 100, 10);
+            return Character("你的作業", 250, rand() % 40 + 100, 20);
         }
     }
 
     if (playerLevel >= 12) {
         if (enemyType < 40) {
-            return Character("宇宙無敵超級深淵惡魔-龍龍", 250, rand() % 4 + 200, 20);
+            return Character("宇宙無敵超級深淵惡魔-龍龍", 150, rand() % 4 + 80, 10);
         }
     }
 
     if (playerLevel >= 9) {
         if (enemyType < 40) {
-            return Character("林克", 100, rand() % 25 + 80, 15);
+            return Character("林克", 85, rand() % 25 + 60, 15);
         }
     }
 
     if (playerLevel >= 6) {
         if (enemyType < 50) {
-            return Character("芙莉蓮花", 50, rand() % 10 + 60, 5);
+            return Character("芙莉蓮花", 50, rand() % 10 + 40, 5);
         }
     }
 

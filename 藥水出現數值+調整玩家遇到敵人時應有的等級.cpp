@@ -761,6 +761,13 @@ int main() {
                 cout << "\n遇到敵人: " << enemy.getName() << endl;
                 battle(player, enemy);
                 consecutiveNothingFound = 0;
+
+                // 判斷是否打敗的是 "你的作業"
+                if (enemy.getName() == "你的作業" && !enemy.isAlive()) {
+                    cout << "\n🎉 恭喜你戰勝了『你的作業』！你已經完成了冒險的最大挑戰！" << endl;
+                    cout << "🏆 遊戲結束，感謝你的遊玩！\n" << endl;
+                    break; // 結束主遊戲迴圈
+                }
             }
         }
         else if (choice == 2) {

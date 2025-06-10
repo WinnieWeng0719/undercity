@@ -4,10 +4,10 @@
 #include <string>
 
 #include "Character.h"       // 引入 Character 類別
-#include "./Item.h" // 確保包含檔案的路徑正確           // 引入 Item 類別及其子類別
-#include "./game_funtion.h"  // 引入遊戲函式
-#include "./Weapon.h"
-#include "./Potion.h"
+#include "Item.h" // 確保包含檔案的路徑正確           // 引入 Item 類別及其子類別
+#include "game_funtion.h"  // 引入遊戲函式
+#include "Weapon.h"
+#include "Potion.h"
 using namespace std;
 int main() {
     srand(time(0));
@@ -53,6 +53,15 @@ int main() {
                 Character enemy = generateEnemy(player.getLevelValue());
                 std::cout << "\n遇到敵人: " << enemy.getName() << std::endl;
                 battle(player, enemy);
+
+                // 判斷是否打敗的是 "你的作業"
+                if (enemy.getName() == "你的作業" && !enemy.isAlive()) {
+                    cout << "\n🎉 恭喜你戰勝了『你的作業』！你已經完成了冒險的最大挑戰！" << endl;
+                    cout << "🏆 遊戲結束，感謝你的遊玩！\n" << endl;
+                    break; // 結束主遊戲迴圈
+                }
+
+
                 consecutiveNothingFound = 0;
             }
         }

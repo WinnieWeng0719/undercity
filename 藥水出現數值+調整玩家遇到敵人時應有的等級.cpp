@@ -409,13 +409,13 @@ void ExplosionPotion::applyEffect(Character& target, Character& attacker) {
 Character generateEnemy(int playerLevel) {
     int enemyType = rand() % 100;
 
-    if (playerLevel >= 12) {
-        if (enemyType < 40) {
+    if (playerLevel >= 15) {
+        if (enemyType < 20) {
             return Character("宇宙無敵超級深淵惡魔-龍龍", 500, rand() % 4 + 200, 20);
         }
     }
 
-    if (playerLevel >= 20) {
+    if (playerLevel >= 12) {
         if (enemyType < 30) {
             return Character("你的作業", 250, rand() % 40 + 100, 10);
         }

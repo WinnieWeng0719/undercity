@@ -38,8 +38,15 @@ int main() {
                 if (rand() % 3 == 0) { // 33% 機率遇到敵人
                     Character enemy = generateEnemy(player.getLevelValue());
                     std::cout << "\n遇到敵人: " << enemy.getName() << std::endl;
-                    battle(player, enemy);
+                    bool enemyDefeated = battle(player, enemy); // 呼叫戰鬥，並接收結果
                     consecutiveNothingFound = 0;
+
+                    // 判斷是否打敗的是 "你的作業"
+                    if (enemy.getName() == "你的作業" && !enemy.isAlive()) {
+                    cout << "\n🎉 恭喜玩家擊敗了最硬敵人『你的作業』！玩家已經完成了地下城的最大挑戰！" << endl;
+                    cout << "🏆 地下城遊戲結束，感謝玩家的挑戰！\n" << endl;
+                    cout << "玩家離開地下城" << endl;
+                    break; // 結束主遊戲迴圈
                 }
                 else {
                     std::cout << "地下城一片寧靜... \n" << std::endl;;
@@ -50,7 +57,7 @@ int main() {
                 // 連續兩次什麼都沒找到，這次強制遇到敵人
                 Character enemy = generateEnemy(player.getLevelValue());
                 std::cout << "\n遇到敵人: " << enemy.getName() << std::endl;
-                battle(player, enemy);
+                 bool enemyDefeated = battle(player, enemy); // 呼叫戰鬥，並接收結果
                 consecutiveNothingFound = 0;
 
                 // 判斷是否打敗的是 "你的作業"

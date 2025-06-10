@@ -22,7 +22,7 @@
 <h3>Item.h Item.cpp:/h3>
   <h3>進行武器及藥水的基礎物品設定</h3>
 <h3>Weapon.h Weapon.cpp</h3>
-  <h3>設定劍、斧頭、短弓等需特別設定耐久值及裝備問題的事項</h3</h3>
+  <h3>設定劍、斧頭、短弓等需特別設定耐久值及裝備問題的事項</h3>
 <h3>Potion.h Potion.cpp：</h3>
   <h3>設定多種藥水及其不同功能</h3>
 <h3>Character.h Character.cpp</h3>

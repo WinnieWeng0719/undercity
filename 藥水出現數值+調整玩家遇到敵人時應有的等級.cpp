@@ -69,7 +69,7 @@ public:
     }
 
     // Getter 方法
-    int getDurability() const { return durability_; }
+    int getDurability() const { return durability_ ; }
 };
 
 // 新增弓類別，繼承自 Weapon
@@ -479,7 +479,8 @@ void handleItemDrop(Character& player, const string& itemName, Item* droppedItem
 }
 
 // 戰鬥系統
-void battle(Character& player, Character& enemy) {
+// 修改 battle 函式，回傳一個 bool 值表示敵人是否被擊敗
+bool battle(Character& player, Character& enemy) {
     cout << "一隻 " << enemy.getName() << " 出現了！\n" << endl;
 
     while (player.isAlive() && enemy.isAlive()) {
@@ -495,7 +496,7 @@ void battle(Character& player, Character& enemy) {
         if (!enemy.isAlive()) {
             cout << enemy.getName() << " 因中毒而死亡！\n" << endl;
             player.gainExperience(4 + player.getLevelValue());
-            break;
+            return true; // 敵人死亡，回傳 true
         }
 
         // 新增敵人血量高於玩家時的警告
@@ -629,7 +630,7 @@ void battle(Character& player, Character& enemy) {
                         handleItemDrop(player, "治療藥水", new HealthPotion("治療藥水", 20), "🧪");
                     }
                     player.gainExperience(4 + player.getLevelValue());
-                    break; // 敵人死亡，結束戰鬥
+                    return true; // 敵人死亡，回傳 true
                 }
                 else {
                     continue; // 如果使用其他物品或者爆炸藥水未殺死敵人，則繼續戰鬥
@@ -670,10 +671,10 @@ void battle(Character& player, Character& enemy) {
             // 哥布林敵人有機會掉落藥水
             else if (isGoblinEnemy) {
                 int potionDropChance = rand() % 100;
-                if (potionDropChance < 0) { // 30% 機率掉落治療藥水
+                if (potionDropChance < 30) { // 30% 機率掉落治療藥水
                     handleItemDrop(player, "治療藥水", new HealthPotion("治療藥水", 20), "🧪");
                 }
-                else if (potionDropChance < 30) { // 20% 機率掉落毒藥水 (累積機率 30+20=50%)
+                else if (potionDropChance < 50) { // 20% 機率掉落毒藥水 (累積機率 30+20=50%)
                     handleItemDrop(player, "毒藥水", new PoisonPotion("毒藥水", 3), "☠️"); // 持續 3 回合
                 }
                 else if (potionDropChance < 70) { // 20% 機率掉落強化藥水 (累積機率 50+20=70%)
@@ -690,7 +691,7 @@ void battle(Character& player, Character& enemy) {
                 handleItemDrop(player, "治療藥水", new HealthPotion("治療藥水", 20), "🧪");
             }
             player.gainExperience(4 + player.getLevelValue());
-            break;
+            return true; // 敵人死亡，回傳 true
         }
 
         // 敵人回擊
@@ -705,7 +706,9 @@ void battle(Character& player, Character& enemy) {
 
     if (!player.isAlive()) {
         cout <<endl<< "GAME OVER。" << endl;
+        return false; // 玩家死亡，回傳 false
     }
+    return false; // 預設情況，應該不會執行到這裡
 }
 
 // 主選單
@@ -742,13 +745,22 @@ int main() {
                 << " 生命值: " << player.getHealth()
                 << " 防禦力: " << player.getDefense() << "\n" << endl;
 
+            string enemyNameDuringBattle; // 用來儲存戰鬥中敵人的名字
 
             if (consecutiveNothingFound < 2) {
                 if (rand() % 3 == 0) { // 33% 機率遇到敵人
                     Character enemy = generateEnemy(player.getLevelValue());
+                    enemyNameDuringBattle = enemy.getName(); // 在這裡儲存敵人的名字
                     cout << "\n遇到敵人: " << enemy.getName() << endl;
-                    battle(player, enemy);
+                    bool enemyDefeated = battle(player, enemy); // 呼叫戰鬥，並接收結果
                     consecutiveNothingFound = 0;
+
+                    if (enemyDefeated && enemyNameDuringBattle == "你的作業") { // 在這裡檢查敵人的名字
+                        cout << "\n🎉 恭喜玩家擊敗了最硬敵人『你的作業』！玩家已經完成了地下城的最大挑戰！" << endl;
+                        cout << "🏆 地下城遊戲結束，感謝玩家的挑戰！\n" << endl;
+                        cout << "玩家離開地下城" << endl;
+                        break; // 結束主遊戲迴圈
+                    }
                 }
                 else {
                     cout << "地下城一片寧靜... \n" << endl;;
@@ -758,12 +770,12 @@ int main() {
             else {
                 // 連續兩次什麼都沒找到，這次強制遇到敵人
                 Character enemy = generateEnemy(player.getLevelValue());
+                enemyNameDuringBattle = enemy.getName(); // 在這裡儲存敵人的名字
                 cout << "\n遇到敵人: " << enemy.getName() << endl;
-                battle(player, enemy);
+                bool enemyDefeated = battle(player, enemy); // 呼叫戰鬥，並接收結果
                 consecutiveNothingFound = 0;
 
-                // 判斷是否打敗的是 "你的作業"
-                if (enemy.getName() == "你的作業" && !enemy.isAlive()) {
+                if (enemyDefeated && enemyNameDuringBattle == "你的作業") { // 在這裡檢查敵人的名字
                     cout << "\n🎉 恭喜玩家擊敗了最硬敵人『你的作業』！玩家已經完成了地下城的最大挑戰！" << endl;
                     cout << "🏆 地下城遊戲結束，感謝玩家的挑戰！\n" << endl;
                     cout << "玩家離開地下城" << endl;

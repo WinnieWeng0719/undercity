@@ -78,7 +78,7 @@ void handleItemDrop(Character& player, const std::string& itemName, Item* droppe
 }
 
 // 戰鬥系統
-void battle(Character& player, Character& enemy) {
+bool battle(Character& player, Character& enemy) {
     std::cout << "一隻 " << enemy.getName() << " 出現了！\n" << std::endl;
 
     while (player.isAlive() && enemy.isAlive()) {
@@ -94,7 +94,7 @@ void battle(Character& player, Character& enemy) {
         if (!enemy.isAlive()) {
             std::cout << enemy.getName() << " 因中毒而死亡！\n" << std::endl;
             player.gainExperience(4 + player.getLevelValue());
-            break;
+            return true; // 敵人死亡，回傳 true
         }
 
         // 新增敵人血量高於玩家時的警告
@@ -228,7 +228,7 @@ void battle(Character& player, Character& enemy) {
                         handleItemDrop(player, "治療藥水", new HealthPotion("治療藥水", 20), "🧪");
                     }
                     player.gainExperience(4 + player.getLevelValue());
-                    break; // 敵人死亡，結束戰鬥
+                    return true; // 敵人死亡，回傳 true
                 }
                 else {
                     continue; // 如果使用其他物品或者爆炸藥水未殺死敵人，則繼續戰鬥
@@ -303,8 +303,10 @@ void battle(Character& player, Character& enemy) {
     }
 
     if (!player.isAlive()) {
-        std::cout << std::endl << "GAME OVER。" << std::endl;
+        std::cout <<"\nGAME OVER。\n" ;
+        return false; // 玩家死亡，回傳 false
     }
+    return false; // 預設情況，應該不會執行到這裡
 }
 
 // 主選單

@@ -14,7 +14,7 @@ Character generateEnemy(int playerLevel);
 void handleItemDrop(Character& player, const std::string& itemName, Item* droppedItem, const std::string& icon);
 
 // 戰鬥系統
-void battle(Character& player, Character& enemy);
+bool battle(Character& player, Character& enemy);
 
 // 主選單
 void showMenu();

@@ -49,7 +49,8 @@
 <h1>運行畫面截圖：</h1>
 <h3>
 <img width="476" alt="痛毆哥布林" src="https://github.com/user-attachments/assets/8408398c-90d1-4c6e-9f7d-7d6090bf6961" />
-</h3>
+</h3><img width="973" alt="勝利畫面 2025-06-11 下午1 10 09" src="https://github.com/user-attachments/assets/295027d8-6bbe-4b5c-a0f2-931b5c4336db" />
+
 
 <h1>分工資訊：</h1>
 

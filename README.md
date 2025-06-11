@@ -1,14 +1,11 @@
 <body>
-<h1>組別號碼:</h1>
-<h3>第15組</h3>
+<h1>組別:15</h1>
 
-<h1>系級班級:</h1>
-<h3>資工1A</h3>
+<h1>系級班級:資工1A</h1>
 
-<h1>成員資訊:</h1>
-<h3>B3201673 翁歆婷、B3208554 徐承昀</h3>
+<h1>成員:翁歆婷、徐承昀</h1>
 
-<h1>小專題題目:</h1>
+<h1>專題題目:</h1>
 <h3>地下城小遊戲</h3>
 
 <h1>遊戲規則：</h1>
@@ -31,6 +28,11 @@
   <h3>建立敵人物件，戰鬥過程計算、掉落物品及主選單</h3>
 <h3>main.cpp</h3>
   <h3>主選單的選項判斷</h3>
+<img width="846" alt="截圖 2025-06-10 晚上10 10 00" src="https://github.com/user-attachments/assets/d2764446-0ef0-468c-ab50-c42bbd1e28a6" />
+<img width="852" alt="截圖 2025-06-10 晚上10 07 47" src="https://github.com/user-attachments/assets/49494815-6d3b-471c-83db-7437186f3df3" />
+<img width="746" alt="截圖 2025-06-10 晚上10 05 47" src="https://github.com/user-attachments/assets/7e120431-e7dd-4d99-86c9-bd92ae0df43d" />
+<img width="688" alt="截圖 2025-06-11 上午11 37 58" src="https://github.com/user-attachments/assets/dad58637-fb58-4466-a4ef-b47c1b112bd0" />
+<img width="689" alt="截圖 2025-06-11 上午11 42 52" src="https://github.com/user-attachments/assets/29785bd3-c6a0-4310-8146-84c025fa9cb7" />
 
 
 <h1>玩法：</h1>
